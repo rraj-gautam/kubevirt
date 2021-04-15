@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: d-nfs-pv
+  labels:
+    name: d-nfs-pv # name can be anything
+spec:
+  storageClassName: manual # same storage class as pvc
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 100.100.100.100 # ip addres of nfs server
+    path: "/lv-storage/d/dynamic" # path to directory
