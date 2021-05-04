@@ -4,6 +4,7 @@
 - Kubevirt is installed
 - CDI is installed
 - Virtctl is installed
+- ip forwarding is enabled on both host(sysctl.conf) and kubernetes network configs ( if calico )
 
 **1. create dynamic provisioning storage:**
 
