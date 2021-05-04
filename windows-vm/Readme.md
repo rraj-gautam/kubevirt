@@ -6,6 +6,9 @@
 - create storage class:
     - `$ kubectl apply -f sc.yaml`
 
+- create provisioner pod :
+    - `$ kubectl apply -f provisioner-pod.yaml`
+
 - You can test by creating a pvc, it dynamically creates and assigns a PV to that pvc.  
 
 **2. Upload a iso image to a pvc so that it can be used as a boot disk for vm:**
@@ -26,5 +29,7 @@
 
 
 
-*Reference: https://kubevirt.io/2020/KubeVirt-installing_Microsoft_Windows_from_an_iso.html*
+*Reference:* 
+- https://kubevirt.io/2020/KubeVirt-installing_Microsoft_Windows_from_an_iso.html
+- https://cdmana.com/2020/12/202012040127197118.html
 
