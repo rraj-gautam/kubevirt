@@ -1,3 +1,10 @@
+**ASSUMPTION :**
+- Hardrware Virtualization is enabled: qemu, kvm, libvirtd installation
+- Kubernetes Cluster is running
+- Kubevirt is installed
+- CDI is installed
+- Virtctl is installed
+
 **1. create dynamic provisioning storage:**
 
 - create serivce account and rbac: 
