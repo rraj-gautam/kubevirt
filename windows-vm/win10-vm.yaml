@@ -1,34 +1,71 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: win10-hd
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 20Gi
+  #storageClassName: hostpath
+  storageClassName: amerigo-nfs-sc
+---
 apiVersion: kubevirt.io/v1alpha3
 kind: VirtualMachine
 metadata:
-  name: d-win10-vm
+  name: amerigo-win10-vm
+  labels:
+    kubevirt.io/domain: amerigo-windows
 spec:
   running: false
   template:
     metadata:
       labels:
-        kubevirt.io/domain: d-win10-vm
+        kubevirt.io/domain: amerigo-windows
     spec:
       domain:
+        features:
+          acpi: {}
+          apic: {}
+          hyperv:
+            relaxed: {}
+            vapic: {}
+            spinlocks:
+              spinlocks: 8191    
         cpu:
-          cores: 2
+          cores: 4
         devices:
+          autoattachGraphicsDevice: True
           disks:
           - bootOrder: 1
             cdrom:
               bus: sata
             name: cdromiso
-          - disk:
+          - bootOrder: 2
+            cdrom:
+              bus: sata
+            name: virtiocontainerdisk            
+          - bootOrder: 3
+            disk:
               bus: virtio
             name: harddrive
-          - cdrom:
-              bus: sata
-            name: virtiocontainerdisk
+        #firmware:
+      # this sets the bootloader type
+          # bootloader:
+          #   efi: {} 
+          interfaces:
+          - masquerade: {}
+            model: e1000e 
+            name: default               
         machine:
           type: q35
         resources:
           requests:
-            memory: 2G
+            memory: 8G
+      networks:
+        - name: default
+          pod: {}              
       volumes:
       - dataVolume:
           name: win10-vm
