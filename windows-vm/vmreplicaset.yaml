@@ -1,0 +1,77 @@
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachineInstanceReplicaSet
+metadata:
+  name: amerigo-win10
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+#      os: win10
+      kubevirt.io/domain: amerigo-windows
+  template:
+    metadata:
+      name: amerigo-win10
+      labels:
+        kubevirt.io/domain: amerigo-windows
+#        os: win10
+    spec:
+      #running: false
+      # template:
+      #   metadata:
+      #     labels:
+      #       kubevirt.io/domain: amerigo-windows
+      #       prometheus.kubevirt.io: "node-exporter"
+      #   spec:
+      domain:
+        features:
+          acpi: {}
+          apic: {}
+          hyperv:
+            relaxed: {}
+            vapic: {}
+            spinlocks:
+              spinlocks: 8191    
+        cpu:
+          cores: 4
+        devices:
+          autoattachGraphicsDevice: True
+          disks:
+          - bootOrder: 1
+            cdrom:
+              bus: sata
+            name: cdromiso
+          - bootOrder: 2
+            cdrom:
+              bus: sata
+            name: virtiocontainerdisk            
+          - bootOrder: 3
+            disk:
+              bus: virtio
+            name: harddrive
+        #firmware:
+      # this sets the bootloader type
+          # bootloader:
+          #   efi: {} 
+          interfaces:
+          - masquerade: {}
+            model: e1000e 
+            name: default               
+        machine:
+          type: q35
+        resources:
+          requests:
+            memory: 8G
+      networks:
+        - name: default
+          pod: {}              
+      volumes:
+      - dataVolume:
+          name: amerigo-win10-bootdisk
+        name: cdromiso  
+      - name: harddrive
+        ephemeral:   #mount as readonly. if write is performed then COW(copy on write is done)
+          persistentVolumeClaim:
+            claimName: amerigo-win10-harddisk
+      - containerDisk:
+          image: kubevirt/virtio-container-disk
+        name: virtiocontainerdisk
